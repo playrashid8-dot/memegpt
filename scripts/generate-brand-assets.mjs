@@ -1,19 +1,20 @@
 import sharp from "sharp";
-import { writeFileSync } from "fs";
+import { writeFileSync, existsSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, "..");
 const logoPath = join(root, "public", "logo.png");
+const posterPath = join(root, "public", "logo-poster.png");
 const publicDir = join(root, "public");
 
 const logo = sharp(logoPath);
 const meta = await logo.metadata();
 const { width = 1024, height = 1024 } = meta;
 
-// Favicon: crop emblem (top ~52% square region, centered)
-const emblemSize = Math.round(Math.min(width, height * 0.52));
+// Favicon: emblem from orb region (upper ~62% of transparent logo)
+const emblemSize = Math.round(Math.min(width, height * 0.62));
 const emblemTop = Math.round(height * 0.02);
 const emblemLeft = Math.round((width - emblemSize) / 2);
 
@@ -59,11 +60,12 @@ await sharp(favicon32)
   .png()
   .toFile(join(publicDir, "apple-icon.png"));
 
-// OpenGraph: cinematic 1200x630 composite
+// OpenGraph: cinematic 1200x630 composite (poster source if available)
 const ogWidth = 1200;
 const ogHeight = 630;
 const logoOgHeight = 480;
-const logoOgBuffer = await sharp(logoPath)
+const ogSource = existsSync(posterPath) ? posterPath : logoPath;
+const logoOgBuffer = await sharp(ogSource)
   .resize({ height: logoOgHeight, fit: "inside" })
   .png()
   .toBuffer();

@@ -8,31 +8,32 @@ const LOGO_SRC = "/logo.png";
 
 const VARIANTS = {
   navbar: {
-    width: 140,
-    height: 40,
-    className: "h-8 w-auto sm:h-9 md:h-10",
+    width: 180,
+    height: 36,
+    className: "h-7 w-auto max-w-[min(42vw,140px)] sm:h-8 md:h-9 object-contain",
     sizes: "(max-width: 640px) 120px, 140px",
     priority: true,
   },
   hero: {
-    width: 520,
-    height: 520,
-    className: "w-[min(88vw,420px)] sm:w-[min(75vw,480px)] lg:w-[min(42vw,520px)] h-auto",
-    sizes: "(max-width: 640px) 88vw, (max-width: 1024px) 75vw, 520px",
+    width: 732,
+    height: 676,
+    className:
+      "w-[min(72vw,280px)] sm:w-[min(58vw,360px)] md:w-[min(48vw,420px)] lg:w-[min(38vw,480px)] max-w-full h-auto object-contain",
+    sizes: "(max-width: 640px) 72vw, (max-width: 768px) 58vw, (max-width: 1024px) 48vw, 480px",
     priority: true,
   },
   footer: {
     width: 160,
     height: 48,
-    className: "h-10 sm:h-11 w-auto",
+    className: "h-9 sm:h-10 w-auto max-w-[160px] object-contain",
     sizes: "160px",
     priority: false,
   },
   loading: {
-    width: 200,
-    height: 200,
-    className: "w-36 h-auto sm:w-44",
-    sizes: "176px",
+    width: 280,
+    height: 250,
+    className: "w-[min(52vw,200px)] sm:w-52 max-w-full h-auto object-contain",
+    sizes: "(max-width: 640px) 52vw, 208px",
     priority: true,
   },
 } as const;
@@ -126,12 +127,12 @@ export default function Logo({
   if (parallax) {
     return (
       <motion.div
-        className="relative inline-flex items-center justify-center"
+        className="relative inline-flex items-center justify-center max-w-full"
         style={{ x: offset.x, y: offset.y }}
         transition={{ type: "spring", stiffness: 120, damping: 20 }}
       >
         <motion.div
-          className="relative inline-flex items-center justify-center"
+          className="relative inline-flex items-center justify-center max-w-full"
           animate={
             animated
               ? { y: [0, -14, -6, 0], rotate: [0, 0.6, -0.6, 0] }
@@ -147,7 +148,7 @@ export default function Logo({
 
   return (
     <motion.div
-      className="relative inline-flex items-center justify-center"
+      className="relative inline-flex items-center justify-center max-w-full"
       animate={
         animated
           ? {

@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "prepare:logo": "node scripts/prepare-logo.mjs",
+    "generate:brand": "node scripts/prepare-logo.mjs && node scripts/generate-brand-assets.mjs"
   },
   "dependencies": {
     "framer-motion": "^12.40.0",

@@ -142,9 +142,11 @@ export default function Hero() {
               initial={{ opacity: 0, scale: 0.82, y: 24 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.15, ease: EASE }}
-              className="order-1 lg:order-2 flex flex-col items-center relative"
+              className="order-1 lg:order-2 flex flex-col items-center relative w-full max-w-full min-w-0 px-1"
             >
-              <Logo variant="hero" animated parallax showScan />
+              <div className="w-full max-w-full flex justify-center">
+                <Logo variant="hero" animated parallax showScan />
+              </div>
 
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
