@@ -1,0 +1,38 @@
+"use client";
+
+import GridBackground from "./GridBackground";
+import NeonBlobs from "./NeonBlobs";
+import ParticleBackground from "./ParticleBackground";
+
+export default function CinematicBackground() {
+  return (
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+      <GridBackground animated />
+      <NeonBlobs />
+      <ParticleBackground density="low" />
+
+      <div className="absolute inset-0 noise-overlay" />
+      <div className="absolute inset-0 scan-overlay opacity-50" />
+
+      <div
+        className="absolute inset-0 animate-gradient-shift"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 0%, rgba(0,255,136,0.08) 0%, transparent 50%), radial-gradient(ellipse at 18% 100%, rgba(0,240,255,0.04) 0%, transparent 38%)",
+        }}
+      />
+
+      <div
+        className="absolute top-1/4 left-0 w-1/2 h-px bg-gradient-to-r from-transparent via-neon/25 to-transparent opacity-60"
+        style={{ animation: "light-sweep 12s ease-in-out infinite" }}
+      />
+
+      <div
+        className="absolute bottom-0 inset-x-0 h-1/4"
+        style={{
+          background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)",
+        }}
+      />
+    </div>
+  );
+}
