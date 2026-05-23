@@ -1,11 +1,12 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "@/lib/motion";
 import { useCallback, useEffect, useState } from "react";
 import { TERMINAL_SIGNALS, TERMINAL_LOGS } from "@/lib/mockData";
 import type { TerminalSignal } from "@/lib/mockData";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import SectionHeading from "@/components/ui/SectionHeading";
+import { useMotionProfile } from "@/lib/useMedia";
 
 const TYPE_COLORS: Record<TerminalSignal["type"], string> = {
   bullish: "text-neon",
@@ -26,6 +27,7 @@ const TYPE_ICONS: Record<TerminalSignal["type"], string> = {
 function TypingLine({ text, onComplete }: { text: string; onComplete: () => void }) {
   const [displayed, setDisplayed] = useState("");
   const [done, setDone] = useState(false);
+  const { isMobile } = useMotionProfile();
 
   useEffect(() => {
     let i = 0;
@@ -35,7 +37,13 @@ function TypingLine({ text, onComplete }: { text: string; onComplete: () => void
       if (i <= text.length) {
         setDisplayed(text.slice(0, i));
         i++;
-        const delay = text[i - 1] === " " ? 40 : 18 + Math.random() * 22;
+        const delay = isMobile
+          ? text[i - 1] === " "
+            ? 24
+            : 10
+          : text[i - 1] === " "
+            ? 40
+            : 18 + Math.random() * 22;
         timeout = setTimeout(typeNext, delay);
       } else {
         setDone(true);
@@ -43,9 +51,9 @@ function TypingLine({ text, onComplete }: { text: string; onComplete: () => void
       }
     };
 
-    timeout = setTimeout(typeNext, 120);
+    timeout = setTimeout(typeNext, isMobile ? 60 : 120);
     return () => clearTimeout(timeout);
-  }, [text, onComplete]);
+  }, [text, onComplete, isMobile]);
 
   return (
     <div className="flex items-start gap-2 text-neon/75 text-[11px] sm:text-sm leading-relaxed">
@@ -90,7 +98,32 @@ function MatrixRain() {
   );
 }
 
+function SignalPulseBars({ animated }: { animated: boolean }) {
+  return (
+    <div className="flex items-end gap-0.5 h-6 sm:h-7">
+      {Array.from({ length: 12 }).map((_, i) =>
+        animated ? (
+          <motion.div
+            key={i}
+            className="flex-1 bg-gradient-to-t from-neon/30 to-neon rounded-sm"
+            animate={{ height: [`${20 + (i % 3) * 15}%`, `${35 + (i % 4) * 12}%`] }}
+            transition={{ duration: 0.6, repeat: Infinity, repeatType: "reverse", delay: i * 0.05 }}
+          />
+        ) : (
+          <div
+            key={i}
+            className="flex-1 bg-gradient-to-t from-neon/30 to-neon rounded-sm"
+            style={{ height: `${28 + (i % 4) * 10}%` }}
+          />
+        )
+      )}
+    </div>
+  );
+}
+
 export default function LiveTerminal() {
+  const { isMobile, canAnimate, canHover } = useMotionProfile();
+  const cardClass = isMobile ? "glass-lite" : "glass-card-ultra";
   const [visibleSignals, setVisibleSignals] = useState<TerminalSignal[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [logIndex, setLogIndex] = useState(0);
@@ -101,14 +134,15 @@ export default function LiveTerminal() {
   const [tokensScanned, setTokensScanned] = useState(12847);
 
   useEffect(() => {
+    const intervalMs = isMobile ? 1800 : 800;
     const progressInterval = setInterval(() => {
       setScanProgress((p) => (p >= 100 ? 0 : p + Math.random() * 5));
       setConfidence((c) => Math.min(99.9, Math.max(90, c + (Math.random() - 0.48) * 1.2)));
       setCalcValue((v) => (v + Math.random() * 800) % 99999);
       setTokensScanned((t) => t + Math.floor(Math.random() * 3));
-    }, 800);
+    }, intervalMs);
     return () => clearInterval(progressInterval);
-  }, []);
+  }, [isMobile]);
 
   useEffect(() => {
     if (currentIndex >= TERMINAL_SIGNALS.length) {
@@ -119,13 +153,14 @@ export default function LiveTerminal() {
       return () => clearTimeout(reset);
     }
 
+    const delay = isMobile ? 1400 : 950;
     const timer = setTimeout(() => {
       setVisibleSignals((prev) => [TERMINAL_SIGNALS[currentIndex], ...prev.slice(0, 10)]);
       setCurrentIndex((i) => i + 1);
-    }, 950);
+    }, delay);
 
     return () => clearTimeout(timer);
-  }, [currentIndex]);
+  }, [currentIndex, isMobile]);
 
   const handleLogComplete = useCallback(() => {
     setLogHistory((prev) => {
@@ -147,13 +182,13 @@ export default function LiveTerminal() {
         />
 
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 32 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           className="max-w-5xl mx-auto rounded-2xl overflow-hidden neon-border shadow-[0_0_60px_rgba(0,255,136,0.06)]"
         >
-          <div className="flex items-center gap-2 px-3 sm:px-4 py-3 bg-white/[0.04] border-b border-white/[0.06] backdrop-blur-lg">
+          <div className="flex items-center gap-2 px-3 sm:px-4 py-3 bg-white/[0.04] border-b border-white/[0.06] sm:backdrop-blur-lg">
             <div className="flex gap-1.5 shrink-0">
               <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-500/85 shadow-[0_0_6px_rgba(239,68,68,0.5)]" />
               <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-yellow-500/85 shadow-[0_0_6px_rgba(234,179,8,0.5)]" />
@@ -167,16 +202,16 @@ export default function LiveTerminal() {
                 conf: {confidence.toFixed(1)}%
               </span>
               <span className="relative flex h-1.5 w-1.5 sm:h-2 sm:w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon opacity-60" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon opacity-60 motion-reduce:hidden" />
                 <span className="relative inline-flex rounded-full h-full w-full bg-neon shadow-[0_0_6px_rgba(0,255,136,0.6)]" />
               </span>
               <span className="text-[9px] sm:text-xs font-mono text-neon/75 font-bold tracking-wider">LIVE</span>
             </div>
           </div>
 
-          <div className="relative bg-black/92 p-3 sm:p-5 md:p-6 min-h-[420px] sm:min-h-[500px] terminal-text text-sm scan-overlay matrix-bg">
-            <MatrixRain />
-            <div className="absolute inset-0 terminal-scan-line opacity-25" />
+          <div className={`relative bg-black/92 p-3 sm:p-5 md:p-6 min-h-[420px] sm:min-h-[500px] terminal-text text-sm matrix-bg ${isMobile ? "" : "scan-overlay"}`}>
+            {canAnimate && !isMobile && <MatrixRain />}
+            {!isMobile && <div className="absolute inset-0 terminal-scan-line opacity-25" />}
 
             <div className="relative z-10">
               <div className="text-neon/65 mb-3 sm:mb-4 text-[10px] sm:text-sm break-all">
@@ -184,35 +219,26 @@ export default function LiveTerminal() {
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-4 sm:mb-5">
-                <div className="glass-card-ultra rounded-lg p-2.5 sm:p-3 border-neon/12 corner-accent">
+                <div className={`${cardClass} rounded-lg p-2.5 sm:p-3 border-neon/12 corner-accent`}>
                   <p className="text-[9px] sm:text-[10px] text-foreground/30 mb-1 uppercase tracking-wider">Scan Progress</p>
                   <div className="h-1.5 sm:h-2 rounded-full bg-white/[0.04] overflow-hidden mb-1 border border-white/[0.03]">
                     <motion.div
                       className="h-full bg-gradient-to-r from-neon/40 via-neon to-neon-bright rounded-full"
                       animate={{ width: `${Math.min(scanProgress, 100)}%` }}
-                      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                     />
                   </div>
                   <p className="text-xs sm:text-sm text-neon font-mono font-bold">{Math.min(Math.floor(scanProgress), 100)}%</p>
                 </div>
-                <div className="glass-card-ultra rounded-lg p-2.5 sm:p-3 border-neon/12 corner-accent">
+                <div className={`${cardClass} rounded-lg p-2.5 sm:p-3 border-neon/12 corner-accent`}>
                   <p className="text-[9px] sm:text-[10px] text-foreground/30 mb-1 uppercase tracking-wider">AI Confidence</p>
                   <p className="text-lg sm:text-xl text-neon font-bold ticker-glow">{confidence.toFixed(1)}%</p>
                 </div>
-                <div className="glass-card-ultra rounded-lg p-2.5 sm:p-3 border-neon/12 corner-accent">
+                <div className={`${cardClass} rounded-lg p-2.5 sm:p-3 border-neon/12 corner-accent`}>
                   <p className="text-[9px] sm:text-[10px] text-foreground/30 mb-1 uppercase tracking-wider">Signal Pulse</p>
-                  <div className="flex items-end gap-0.5 h-6 sm:h-7">
-                    {Array.from({ length: 12 }).map((_, i) => (
-                      <motion.div
-                        key={i}
-                        className="flex-1 bg-gradient-to-t from-neon/30 to-neon rounded-sm"
-                        animate={{ height: [`${20 + (i % 3) * 15}%`, `${35 + (i % 4) * 12}%`] }}
-                        transition={{ duration: 0.6, repeat: Infinity, repeatType: "reverse", delay: i * 0.05 }}
-                      />
-                    ))}
-                  </div>
+                  <SignalPulseBars animated={canAnimate && !isMobile} />
                 </div>
-                <div className="glass-card-ultra rounded-lg p-2.5 sm:p-3 border-neon/12 corner-accent col-span-2 sm:col-span-1">
+                <div className={`${cardClass} rounded-lg p-2.5 sm:p-3 border-neon/12 corner-accent col-span-2 sm:col-span-1`}>
                   <p className="text-[9px] sm:text-[10px] text-foreground/30 mb-1 uppercase tracking-wider">Tokens Scanned</p>
                   <p className="text-xs sm:text-sm text-cyan/65 font-mono truncate">
                     {tokensScanned.toLocaleString()} · 0x{Math.floor(calcValue).toString(16).padStart(6, "0")}
@@ -242,14 +268,14 @@ export default function LiveTerminal() {
                   {visibleSignals.map((signal) => (
                     <motion.div
                       key={`${signal.id}-${signal.timestamp}`}
-                      initial={{ opacity: 0, x: -24, height: 0 }}
-                      animate={{ opacity: 1, x: 0, height: "auto" }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                      className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-0.5 py-1.5 sm:py-2 border-b border-white/[0.03] hover:bg-neon/[0.02] px-1.5 sm:px-2 -mx-1.5 sm:-mx-2 rounded transition-colors"
+                      initial={{ opacity: 0, x: -16 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                      className={`flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-0.5 py-1.5 sm:py-2 border-b border-white/[0.03] px-1.5 sm:px-2 -mx-1.5 sm:-mx-2 rounded transition-colors ${canHover ? "hover:bg-neon/[0.02]" : ""}`}
                     >
                       <span className="relative flex h-1 w-1 sm:h-1.5 sm:w-1.5 shrink-0">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon opacity-40" />
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon opacity-40 motion-reduce:hidden" />
                         <span className="relative inline-flex rounded-full h-full w-full bg-neon/80" />
                       </span>
                       <span className="text-foreground/22 text-[9px] sm:text-xs font-mono">[{signal.timestamp}]</span>

@@ -1,7 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "@/lib/motion";
 import { type ReactNode } from "react";
+import { useMotionProfile } from "@/lib/useMedia";
 
 type ButtonVariant = "primary" | "secondary" | "ghost";
 
@@ -31,17 +32,24 @@ export default function Button({
   className = "",
   external = false,
 }: ButtonProps) {
-  const baseClasses = `relative inline-flex items-center justify-center gap-2.5 px-7 py-3.5 sm:px-8 sm:py-4 rounded-xl font-semibold text-sm tracking-wide transition-colors duration-300 cursor-pointer overflow-hidden ${variants[variant]} ${className}`;
+  const { canHover, canAnimate, isMobile } = useMotionProfile();
 
-  const motionProps = {
-    whileHover: { scale: 1.03, y: -2 },
-    whileTap: { scale: 0.97 },
-    transition: { type: "spring" as const, stiffness: 420, damping: 22 },
-  };
+  const baseClasses = `relative inline-flex items-center justify-center gap-2.5 px-7 py-3.5 sm:px-8 sm:py-4 rounded-xl font-semibold text-sm tracking-wide transition-colors duration-300 cursor-pointer overflow-hidden touch-manipulation min-h-[44px] ${variants[variant]} ${className}`;
+
+  const motionProps = canHover
+    ? {
+        whileHover: { scale: 1.03, y: -2 },
+        whileTap: { scale: 0.97 },
+        transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] as const },
+      }
+    : {
+        whileTap: { scale: 0.98 },
+        transition: { duration: 0.15, ease: [0.22, 1, 0.36, 1] as const },
+      };
 
   const inner = (
     <>
-      {variant === "primary" && (
+      {variant === "primary" && canAnimate && !isMobile && (
         <>
           <motion.span
             className="absolute inset-0 bg-gradient-to-r from-transparent via-neon/12 to-transparent -skew-x-12"

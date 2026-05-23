@@ -1,9 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion } from "@/lib/motion";
 import { useEffect, useState } from "react";
-import { useIsTouchDevice } from "@/lib/useMedia";
+import { useMotionProfile } from "@/lib/useMedia";
 
 const LOGO_SRC = "/logo.png";
 
@@ -19,8 +19,8 @@ const VARIANTS = {
     width: 732,
     height: 676,
     className:
-      "w-[min(58vw,220px)] sm:w-[min(58vw,360px)] md:w-[min(48vw,420px)] lg:w-[min(38vw,480px)] max-w-full h-auto object-contain",
-    sizes: "(max-width: 640px) 58vw, (max-width: 768px) 58vw, (max-width: 1024px) 48vw, 480px",
+      "w-[min(52vw,200px)] sm:w-[min(58vw,360px)] md:w-[min(48vw,420px)] lg:w-[min(38vw,480px)] max-w-full h-auto object-contain",
+    sizes: "(max-width: 640px) 52vw, (max-width: 768px) 58vw, (max-width: 1024px) 48vw, 480px",
     priority: true,
   },
   footer: {
@@ -58,8 +58,9 @@ export default function Logo({
 }: LogoProps) {
   const config = VARIANTS[variant];
   const [offset, setOffset] = useState({ x: 0, y: 0 });
-  const isTouch = useIsTouchDevice();
-  const enableParallax = parallax && !isTouch;
+  const { isMobile, canParallax, canAnimate } = useMotionProfile();
+  const enableParallax = parallax && canParallax;
+  const enableAnimation = animated && canAnimate && !isMobile;
 
   useEffect(() => {
     if (!enableParallax) return;
@@ -78,7 +79,9 @@ export default function Logo({
     variant === "navbar"
       ? "logo-glow-navbar group-hover:logo-glow-navbar-hover transition-[filter] duration-500"
       : variant === "hero"
-        ? "logo-glow-hero sm:animate-logo-glow-pulse"
+        ? isMobile
+          ? "logo-glow-hero"
+          : "logo-glow-hero sm:animate-logo-glow-pulse"
         : variant === "footer"
           ? "logo-glow-footer"
           : "logo-glow-loading animate-logo-glow-pulse";
@@ -96,19 +99,19 @@ export default function Logo({
     />
   );
 
-  if (!animated && !parallax && !showScan) {
+  if (!enableAnimation && !enableParallax && !showScan) {
     return image;
   }
 
   const content = (
     <>
-      {variant === "hero" && (
+      {variant === "hero" && enableAnimation && (
         <>
           <motion.div
             aria-hidden
             animate={{ scale: [1, 1.08, 1], opacity: [0.15, 0.28, 0.15] }}
             transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute inset-[-12%] rounded-full bg-neon/8 blur-2xl sm:blur-3xl pointer-events-none gpu-layer"
+            className="absolute inset-[-12%] rounded-full bg-neon/8 blur-2xl sm:blur-3xl pointer-events-none"
           />
           <div
             aria-hidden
@@ -123,25 +126,27 @@ export default function Logo({
         </div>
       )}
 
-      <div className={`relative gpu-layer ${variant === "hero" ? "sm:animate-hologram" : ""}`}>{image}</div>
+      <div className={`relative ${variant === "hero" && enableAnimation ? "sm:animate-hologram" : ""}`}>
+        {image}
+      </div>
     </>
   );
 
   if (enableParallax) {
     return (
       <motion.div
-        className="relative inline-flex items-center justify-center max-w-full gpu-layer"
+        className="relative inline-flex items-center justify-center max-w-full"
         style={{ x: offset.x, y: offset.y }}
-        transition={{ type: "spring", stiffness: 100, damping: 24 }}
+        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
       >
         <motion.div
           className="relative inline-flex items-center justify-center max-w-full"
           animate={
-            animated
+            enableAnimation
               ? { y: [0, -10, -4, 0], rotate: [0, 0.4, -0.4, 0] }
               : undefined
           }
-          transition={animated ? { duration: 7, repeat: Infinity, ease: "easeInOut" } : undefined}
+          transition={enableAnimation ? { duration: 7, repeat: Infinity, ease: "easeInOut" } : undefined}
         >
           {content}
         </motion.div>
@@ -151,9 +156,9 @@ export default function Logo({
 
   return (
     <motion.div
-      className="relative inline-flex items-center justify-center max-w-full gpu-layer"
+      className="relative inline-flex items-center justify-center max-w-full"
       animate={
-        animated
+        enableAnimation
           ? {
               y: [0, -10, -4, 0],
               rotate: [0, 0.4, -0.4, 0],
@@ -161,7 +166,7 @@ export default function Logo({
           : undefined
       }
       transition={
-        animated ? { duration: 7, repeat: Infinity, ease: "easeInOut" } : undefined
+        enableAnimation ? { duration: 7, repeat: Infinity, ease: "easeInOut" } : undefined
       }
     >
       {content}

@@ -43,3 +43,17 @@ export function useIsTouchDevice() {
 
   return isTouch;
 }
+
+/** Combined motion/performance profile for mobile + reduced-motion fallbacks. */
+export function useMotionProfile() {
+  const isMobile = useIsMobile();
+  const reducedMotion = usePrefersReducedMotion();
+  const isTouch = useIsTouchDevice();
+
+  const lite = isMobile || reducedMotion;
+  const canAnimate = !reducedMotion;
+  const canHover = !isTouch && !isMobile;
+  const canParallax = !isTouch && !isMobile && canAnimate;
+
+  return { isMobile, reducedMotion, isTouch, lite, canAnimate, canHover, canParallax };
+}

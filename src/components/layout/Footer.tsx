@@ -31,7 +31,7 @@ const TOKEN_LINKS = [
 
 export default function Footer() {
   return (
-    <footer className="relative border-t border-neon/15 bg-black/80 backdrop-blur-xl">
+    <footer className="relative footer-surface sm:bg-black/80 sm:backdrop-blur-xl">
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-neon/40 to-transparent" />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 sm:py-18">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">

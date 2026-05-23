@@ -1,11 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "@/lib/motion";
 import { MEME_COINS } from "@/lib/mockData";
 import SectionWrapper from "@/components/ui/SectionWrapper";
 import SectionHeading from "@/components/ui/SectionHeading";
 import GlassCard from "@/components/ui/GlassCard";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
+import { useMotionProfile } from "@/lib/useMedia";
 
 function RiskBadge({ score }: { score: number }) {
   const color =
@@ -55,6 +56,8 @@ function LiquidityBadge({ status }: { status: string }) {
 }
 
 export default function AIScanner() {
+  const { isMobile, canAnimate } = useMotionProfile();
+
   return (
     <SectionWrapper id="scanner">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -68,13 +71,17 @@ export default function AIScanner() {
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mb-8 sm:mb-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 glass-card-ultra rounded-xl px-4 sm:px-6 py-4 sm:py-5 max-w-2xl mx-auto border-neon/15 corner-accent"
+          className={`mb-8 sm:mb-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 rounded-xl px-4 sm:px-6 py-4 sm:py-5 max-w-2xl mx-auto border-neon/15 corner-accent ${isMobile ? "glass-lite" : "glass-card-ultra"}`}
         >
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            className="w-7 h-7 border-2 border-neon/30 border-t-neon rounded-full shrink-0 shadow-[0_0_15px_rgba(0,255,136,0.3)]"
-          />
+          {canAnimate && !isMobile ? (
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+              className="w-7 h-7 border-2 border-neon/30 border-t-neon rounded-full shrink-0 shadow-[0_0_15px_rgba(0,255,136,0.3)]"
+            />
+          ) : (
+            <div className="w-7 h-7 border-2 border-neon/30 border-t-neon rounded-full shrink-0" />
+          )}
           <div className="text-center sm:text-left">
             <p className="text-sm font-mono text-neon/90">
               Scanning <AnimatedCounter value={12847} suffix="+" className="text-neon font-bold ticker-glow" /> tokens across 12 chains...
@@ -83,7 +90,7 @@ export default function AIScanner() {
           </div>
           <div className="flex items-center gap-2 shrink-0 px-3 py-1.5 rounded-full bg-neon/5 border border-neon/20">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon opacity-75" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon opacity-75 motion-reduce:hidden" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-neon" />
             </span>
             <span className="text-xs font-mono text-neon/70 font-bold tracking-wider">LIVE</span>

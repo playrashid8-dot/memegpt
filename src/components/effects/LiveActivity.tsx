@@ -1,18 +1,19 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "@/lib/motion";
 import { useEffect, useState } from "react";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import { LIVE_ACTIVITY } from "@/lib/mockData";
-import { useIsMobile } from "@/lib/useMedia";
+import { useMotionProfile } from "@/lib/useMedia";
 
 export default function LiveActivity() {
-  const isMobile = useIsMobile();
+  const { isMobile, canHover } = useMotionProfile();
   const [values, setValues] = useState<number[]>(() =>
     LIVE_ACTIVITY.map((item) => item.value)
   );
 
   useEffect(() => {
+    const intervalMs = isMobile ? 4500 : 2800;
     const interval = setInterval(() => {
       setValues((prev) =>
         prev.map((v, i) => {
@@ -28,20 +29,22 @@ export default function LiveActivity() {
           return Math.max(0, Math.floor(next));
         })
       );
-    }, 2800);
+    }, intervalMs);
     return () => clearInterval(interval);
-  }, []);
+  }, [isMobile]);
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3 max-w-5xl mx-auto">
       {LIVE_ACTIVITY.map((item, i) => (
         <motion.div
           key={item.label}
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.75 + i * 0.08, ease: [0.22, 1, 0.36, 1] }}
-          whileHover={isMobile ? undefined : { scale: 1.02, y: -3 }}
-          className="glass-card-ultra rounded-xl p-3 sm:p-4 md:p-5 text-center corner-accent holographic-border relative group gpu-layer"
+          transition={{ delay: 0.55 + i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+          whileHover={canHover ? { scale: 1.02, y: -3 } : undefined}
+          className={`rounded-xl p-3 sm:p-4 md:p-5 text-center corner-accent holographic-border relative group ${
+            isMobile ? "glass-lite" : "glass-card-ultra"
+          }`}
         >
           <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-neon/6 via-transparent to-cyan/4 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           <div className="relative">

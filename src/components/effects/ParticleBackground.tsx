@@ -14,16 +14,20 @@ interface Particle {
 interface ParticleBackgroundProps {
   density?: "low" | "medium" | "high";
   className?: string;
+  enabled?: boolean;
 }
 
 export default function ParticleBackground({
   density = "medium",
   className = "",
+  enabled = true,
 }: ParticleBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const visibleRef = useRef(true);
 
   useEffect(() => {
+    if (!enabled) return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -39,15 +43,15 @@ export default function ParticleBackground({
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (reduced) return isMobile ? 6 : 10;
       const base = {
-        low: isSmall ? 10 : isMobile ? 14 : 28,
-        medium: isSmall ? 14 : isMobile ? 20 : 42,
-        high: isSmall ? 18 : isMobile ? 26 : 52,
+        low: isSmall ? 8 : isMobile ? 12 : 28,
+        medium: isSmall ? 12 : isMobile ? 18 : 42,
+        high: isSmall ? 16 : isMobile ? 22 : 52,
       };
       return base[density];
     };
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
       canvas.style.width = `${window.innerWidth}px`;
@@ -140,7 +144,9 @@ export default function ParticleBackground({
       window.removeEventListener("resize", handleResize);
       observer.disconnect();
     };
-  }, [density]);
+  }, [density, enabled]);
+
+  if (!enabled) return null;
 
   return (
     <canvas

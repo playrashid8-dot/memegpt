@@ -4,12 +4,13 @@ import { SITE } from "@/lib/constants";
 import { BSCSCAN_TOKEN_URL, TOKEN } from "@/lib/token";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import MotionProvider from "@/components/providers/MotionProvider";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -22,7 +23,7 @@ const geistMono = Geist_Mono({
 const orbitron = Orbitron({
   variable: "--font-orbitron",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["500", "600", "700", "800", "900"],
   display: "swap",
 });
 
@@ -30,6 +31,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
+  viewportFit: "cover",
   themeColor: "#000000",
   colorScheme: "dark",
 };
@@ -123,12 +125,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${geistMono.variable} ${orbitron.variable} h-full scroll-smooth`}
+      className={`${spaceGrotesk.variable} ${geistMono.variable} ${orbitron.variable} h-full`}
     >
-      <body className="min-h-full flex flex-col bg-black text-foreground antialiased overflow-x-hidden">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+      <body className="min-h-full flex flex-col bg-black text-foreground antialiased overflow-x-clip">
+        <MotionProvider>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </MotionProvider>
       </body>
     </html>
   );

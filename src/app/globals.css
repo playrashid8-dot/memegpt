@@ -54,21 +54,34 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  overscroll-behavior-y: none;
+  overflow-x: clip;
 }
 
 .gpu-layer {
-  transform: translateZ(0);
   backface-visibility: hidden;
+}
+
+.fixed-viewport-layer {
+  contain: strict;
+  transform: translateZ(0);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-space-grotesk), system-ui, sans-serif;
-  overflow-x: hidden;
+  overflow-x: clip;
+  overscroll-behavior-y: none;
+  -webkit-overflow-scrolling: touch;
+  min-height: 100dvh;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+  overflow-x: clip;
 }
 
 .font-display {
@@ -222,7 +235,11 @@ body {
 .animate-pulse-ring { animation: pulse-ring 3.5s var(--ease-premium) infinite; }
 .animate-ticker {
   animation: ticker-scroll 40s linear infinite;
-  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.animate-ticker-mobile {
+  animation: ticker-scroll 55s linear infinite;
   backface-visibility: hidden;
 }
 .animate-corner-pulse { animation: corner-pulse 2.5s var(--ease-premium) infinite; }
@@ -296,6 +313,32 @@ body {
     inset 0 -1px 0 rgba(0, 255, 136, 0.05);
 }
 
+.glass-lite {
+  background: linear-gradient(160deg, rgba(0,255,136,0.06) 0%, rgba(0,0,0,0.88) 55%, rgba(0,0,0,0.92) 100%);
+  border: 1px solid rgba(0, 255, 136, 0.18);
+  box-shadow:
+    0 0 0 1px rgba(0, 255, 136, 0.04),
+    0 6px 24px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+
+.footer-surface {
+  background: rgba(0, 0, 0, 0.92);
+  border-top: 1px solid rgba(0, 255, 136, 0.15);
+}
+
+.ticker-surface {
+  background: rgba(0, 0, 0, 0.88);
+  border-top: 1px solid rgba(0, 255, 136, 0.15);
+  border-bottom: 1px solid rgba(0, 255, 136, 0.15);
+}
+
+.static-gradient-bg {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(0,255,136,0.07) 0%, transparent 52%),
+    radial-gradient(ellipse at 18% 100%, rgba(0,240,255,0.03) 0%, transparent 38%);
+}
+
 .neon-border {
   border: 1px solid rgba(0, 255, 136, 0.32);
   box-shadow: inset 0 0 32px rgba(0, 255, 136, 0.05), 0 0 24px rgba(0, 255, 136, 0.08);
@@ -331,7 +374,6 @@ body {
     linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
   background-size: 48px 48px;
   animation: grid-move 24s linear infinite;
-  will-change: transform;
 }
 
 .grid-bg-perspective {
@@ -513,6 +555,10 @@ body {
 }
 
 @media (max-width: 640px) {
+  html {
+    scroll-behavior: auto;
+  }
+
   :root {
     --grid-color: rgba(0, 255, 136, 0.028);
   }
@@ -520,8 +566,8 @@ body {
   .glass-card,
   .glass-card-premium,
   .glass-card-ultra {
-    backdrop-filter: blur(10px) saturate(1.2);
-    -webkit-backdrop-filter: blur(10px) saturate(1.2);
+    backdrop-filter: blur(8px) saturate(1.15);
+    -webkit-backdrop-filter: blur(8px) saturate(1.15);
     box-shadow:
       0 0 0 1px rgba(0, 255, 136, 0.04),
       0 6px 24px rgba(0, 0, 0, 0.45),
@@ -533,6 +579,11 @@ body {
       0 0 0 1px rgba(0, 255, 136, 0.04),
       0 8px 28px rgba(0, 0, 0, 0.5),
       inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  .glass-lite {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
   .logo-glow-hero {
@@ -555,16 +606,37 @@ body {
 
   .animate-gradient-shift,
   .hero-gradient-overlay {
-    animation-duration: 14s;
+    animation-duration: 18s;
+  }
+
+  .gradient-text-shimmer {
+    animation: none;
   }
 
   .grid-bg-animated {
-    animation-duration: 32s;
+    animation-duration: 36s;
   }
 
   .noise-overlay {
     animation: none;
-    opacity: 0.015 !important;
+    opacity: 0.012 !important;
+  }
+
+  .scan-overlay::after {
+    opacity: 0.5;
+  }
+
+  .light-sweep::after {
+    animation: none;
+    opacity: 0;
+  }
+
+  .animate-logo-glow-pulse {
+    animation: none;
+  }
+
+  .holographic-border::before {
+    animation: none;
   }
 
   .btn-pulse-ring::before {
@@ -576,6 +648,16 @@ body {
     height: 40px;
     opacity: 0.6;
   }
+
+  .footer-surface {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .ticker-surface {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -585,7 +667,17 @@ body {
     transition-duration: 0.01ms !important;
   }
 
-  .animate-ticker {
+  .animate-ticker,
+  .animate-ticker-mobile {
     animation: none;
+  }
+
+  .gradient-text-shimmer,
+  .grid-bg-animated,
+  .noise-overlay,
+  .light-sweep::after,
+  .animate-logo-glow-pulse,
+  .holographic-border::before {
+    animation: none !important;
   }
 }
