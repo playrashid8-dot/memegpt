@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Orbitron, Space_Grotesk } from "next/font/google";
 import { SITE } from "@/lib/constants";
+import { BSCSCAN_TOKEN_URL, TOKEN } from "@/lib/token";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import "./globals.css";
@@ -43,8 +44,15 @@ export const metadata: Metadata = {
   keywords: [
     "meme coin",
     "AI crypto",
-    "MEMEGPT",
+    TOKEN.name,
+    TOKEN.symbol,
     "meme token",
+    "BNB Smart Chain",
+    "BSC",
+    "BEP-20",
+    "PancakeSwap",
+    TOKEN.address,
+    "BscScan",
     "whale tracking",
     "crypto signals",
     "degen",
@@ -96,6 +104,14 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: SITE.url,
+  },
+  other: {
+    "token:contract": TOKEN.address,
+    "token:symbol": TOKEN.symbol,
+    "token:chain": "BNB Smart Chain",
+    "token:chain_id": String(TOKEN.chainId),
+    "token:explorer": BSCSCAN_TOKEN_URL,
+    "token:dex": TOKEN.pancakeswapUrl,
   },
 };
 

@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Separate Hardhat token package (not part of the Next.js app)
+    "memegpt-token/**",
   ]),
 ]);
 

@@ -1,5 +1,7 @@
 import { SITE } from "@/lib/constants";
+import { TOKEN } from "@/lib/token";
 import Logo from "@/components/ui/Logo";
+import ContractAddress from "@/components/ui/ContractAddress";
 
 const SOCIALS = [
   {
@@ -22,6 +24,11 @@ const SOCIALS = [
   },
 ];
 
+const TOKEN_LINKS = [
+  { label: "PancakeSwap", href: SITE.links.pancakeswap },
+  { label: "BscScan", href: SITE.links.bscscan },
+] as const;
+
 export default function Footer() {
   return (
     <footer className="relative border-t border-neon/15 bg-black/80 backdrop-blur-xl">
@@ -32,6 +39,9 @@ export default function Footer() {
             <Logo variant="footer" />
             <p className="text-sm text-foreground/45 max-w-sm">
               {SITE.tagline}
+            </p>
+            <p className="text-xs font-mono text-foreground/35">
+              {TOKEN.symbol} · BNB Smart Chain · Chain ID {TOKEN.chainId}
             </p>
           </div>
 
@@ -51,20 +61,43 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-white/[0.06] flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 text-xs font-mono text-foreground/35">
-            <span>Contract:</span>
-            <code className="px-3 py-1.5 rounded-lg bg-white/[0.04] text-neon/70 border border-neon/15">
-              {SITE.contract}
-            </code>
+        <div className="mt-10 pt-8 border-t border-white/[0.06] space-y-6">
+          <div className="flex flex-col gap-4">
+            <p className="text-[10px] font-mono uppercase tracking-[0.2em] text-foreground/35 text-center md:text-left">
+              Token Contract
+            </p>
+            <ContractAddress variant="inline" className="justify-center md:justify-start" />
           </div>
-          <p className="text-xs text-foreground/35">
+
+          <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
+            {TOKEN_LINKS.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl glass-card-ultra text-xs sm:text-sm font-medium text-foreground/55 hover:text-neon hover:border-neon/35 transition-colors min-h-[44px] touch-manipulation"
+              >
+                {link.label}
+                <svg className="w-3.5 h-3.5 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-8 pt-6 border-t border-white/[0.06] flex flex-col md:flex-row items-center justify-between gap-4">
+          <code className="font-mono text-[10px] sm:text-xs text-foreground/30 break-all text-center md:text-left max-w-full">
+            {TOKEN.address}
+          </code>
+          <p className="text-xs text-foreground/35 shrink-0">
             &copy; {new Date().getFullYear()} {SITE.name}. All rights reserved.
           </p>
         </div>
 
         <p className="mt-6 text-center text-[10px] text-foreground/25 leading-relaxed max-w-2xl mx-auto">
-          Disclaimer: MEMEGPT is a meme token for entertainment purposes. This is
+          Disclaimer: {TOKEN.name} is a meme token for entertainment purposes. This is
           not financial advice. Cryptocurrency investments carry high risk. Always
           do your own research before investing. Past performance does not
           guarantee future results.

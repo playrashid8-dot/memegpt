@@ -1,25 +1,31 @@
+import { BSCSCAN_TOKEN_URL, TOKEN, formatShortAddress } from "@/lib/token";
+
 export const SITE = {
-  name: "MEMEGPT",
+  name: TOKEN.name,
   tagline: "AI-powered meme coin intelligence.",
   heroSubtitle:
     "Discover trending meme coins, whale activity, and viral opportunities before the market explodes.",
   description:
-    "MEMEGPT is the AI-powered meme coin intelligence platform. Scan trending tokens, track whale activity, and catch viral opportunities before the market explodes.",
+    `${TOKEN.name} (${TOKEN.symbol}) is live on BNB Smart Chain. Trade on PancakeSwap, verify on BscScan, and join the AI-powered meme coin intelligence platform.`,
   url: "https://memegpt.ai",
-  contract: "0xMEME...GPT42069",
+  contract: formatShortAddress(),
+  contractAddress: TOKEN.address,
   links: {
     telegram: "https://t.me/memegpt",
     twitter: "https://x.com/memegpt",
-    buy: "https://app.uniswap.org",
+    buy: TOKEN.pancakeswapUrl,
+    pancakeswap: TOKEN.pancakeswapUrl,
+    bscscan: BSCSCAN_TOKEN_URL,
   },
 } as const;
 
 export const NAV_LINKS = [
+  { label: "Token", href: "#token" },
+  { label: "Chart", href: "#chart" },
   { label: "Scanner", href: "#scanner" },
   { label: "Terminal", href: "#terminal" },
   { label: "Tokenomics", href: "#tokenomics" },
   { label: "Roadmap", href: "#roadmap" },
-  { label: "Why MEMEGPT", href: "#why" },
 ] as const;
 
 export const HERO_STATS = [

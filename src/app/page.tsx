@@ -1,4 +1,6 @@
 import Hero from "@/components/sections/Hero";
+import TokenStats from "@/components/sections/TokenStats";
+import DexScreener from "@/components/sections/DexScreener";
 import AIScanner from "@/components/sections/AIScanner";
 import LiveTerminal from "@/components/sections/LiveTerminal";
 import Tokenomics from "@/components/sections/Tokenomics";
@@ -13,6 +15,8 @@ export default function Home() {
       <CinematicBackground />
       <div className="relative z-10">
         <Hero />
+        <TokenStats />
+        <DexScreener />
         <AIScanner />
         <LiveTerminal />
         <Tokenomics />

@@ -1,0 +1,25 @@
+{
+  "name": "memegpt-token",
+  "version": "1.0.0",
+  "description": "Production-ready no-tax BEP20 token for MEMEGPT (MGPT) on BNB Smart Chain",
+  "private": true,
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "clean": "hardhat clean",
+    "deploy:testnet": "hardhat run scripts/deploy-testnet.ts --network bscTestnet",
+    "deploy:mainnet": "hardhat run scripts/deploy-mainnet.ts --network bscMainnet",
+    "verify:testnet": "hardhat run scripts/verify.ts --network bscTestnet",
+    "verify:mainnet": "hardhat run scripts/verify.ts --network bscMainnet",
+    "ignition:deploy:testnet": "hardhat ignition deploy ignition/modules/MEMEGPT.ts --network bscTestnet --parameters ignition/parameters/bscTestnet.json",
+    "ignition:deploy:mainnet": "hardhat ignition deploy ignition/modules/MEMEGPT.ts --network bscMainnet --parameters ignition/parameters/bscMainnet.json"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^5.2.0",
+    "@types/node": "^22.10.0",
+    "dotenv": "^16.4.7",
+    "hardhat": "^2.22.17",
+    "typescript": "^5.7.2"
+  }
+}

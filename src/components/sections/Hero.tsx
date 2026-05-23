@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { HERO_STATS, SITE } from "@/lib/constants";
+import { TOKEN } from "@/lib/token";
 import { useIsMobile } from "@/lib/useMedia";
 import Button from "@/components/ui/Button";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
@@ -101,11 +102,11 @@ export default function Hero() {
                 transition={{ duration: 0.65, delay: 0.51, ease: EASE }}
                 className="flex flex-col sm:flex-row items-center lg:items-start justify-center lg:justify-start gap-2.5 sm:gap-4 mb-8 sm:mb-14"
               >
-                <Button href={SITE.links.buy} external className="w-full sm:w-auto min-w-[200px] sm:btn-pulse-ring">
+                <Button href={TOKEN.pancakeswapUrl} external className="w-full sm:w-auto min-w-[200px] sm:btn-pulse-ring">
                   <span>🚀</span> Buy Token
                 </Button>
-                <Button href={SITE.links.telegram} variant="secondary" external className="w-full sm:w-auto min-w-[200px]">
-                  <span>📡</span> Join Telegram
+                <Button href={TOKEN.pancakeswapUrl} variant="secondary" external className="w-full sm:w-auto min-w-[200px]">
+                  <span>⚡</span> Launch App
                 </Button>
               </motion.div>
 

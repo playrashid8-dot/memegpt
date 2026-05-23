@@ -39,3 +39,22 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Hardhat / Solidity build outputs (never at website root)
+/artifacts/
+/cache/
+/typechain-types/
+/coverage/
+/coverage.json
+/deployments/
+/hardhat.config.ts
+/contracts/
+
+# MEMEGPT token (Hardhat) — separate package under memegpt-token/
+memegpt-token/node_modules/
+memegpt-token/artifacts/
+memegpt-token/cache/
+memegpt-token/typechain-types/
+memegpt-token/coverage/
+memegpt-token/deployments/
+memegpt-token/.env
