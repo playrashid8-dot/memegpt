@@ -7,9 +7,9 @@ export default function GridBackground({ animated = false, perspective = false }
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
       {perspective && (
-        <div className="absolute inset-x-0 top-0 h-[60%] grid-bg-perspective opacity-40" />
+        <div className="absolute inset-x-0 top-0 h-[60%] grid-bg-perspective opacity-25 sm:opacity-40 hidden sm:block" />
       )}
-      <div className={`absolute inset-0 ${animated ? "grid-bg-animated" : "grid-bg"} opacity-80`} />
+      <div className={`absolute inset-0 ${animated ? "grid-bg-animated" : "grid-bg"} opacity-50 sm:opacity-80`} />
       <div
         className="absolute inset-0 animate-gradient-shift"
         style={{

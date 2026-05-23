@@ -11,11 +11,11 @@ export default function CinematicBackground() {
       <NeonBlobs />
       <ParticleBackground density="low" />
 
-      <div className="absolute inset-0 noise-overlay" />
-      <div className="absolute inset-0 scan-overlay opacity-50" />
+      <div className="absolute inset-0 noise-overlay opacity-20 sm:opacity-100" />
+      <div className="absolute inset-0 scan-overlay opacity-30 sm:opacity-50" />
 
       <div
-        className="absolute inset-0 animate-gradient-shift"
+        className="absolute inset-0 animate-gradient-shift hero-gradient-overlay"
         style={{
           background:
             "radial-gradient(ellipse at 50% 0%, rgba(0,255,136,0.08) 0%, transparent 50%), radial-gradient(ellipse at 18% 100%, rgba(0,240,255,0.04) 0%, transparent 38%)",
@@ -23,8 +23,8 @@ export default function CinematicBackground() {
       />
 
       <div
-        className="absolute top-1/4 left-0 w-1/2 h-px bg-gradient-to-r from-transparent via-neon/25 to-transparent opacity-60"
-        style={{ animation: "light-sweep 12s ease-in-out infinite" }}
+        className="absolute top-1/4 left-0 w-1/2 h-px bg-gradient-to-r from-transparent via-neon/15 sm:via-neon/25 to-transparent opacity-40 sm:opacity-60 hidden sm:block"
+        style={{ animation: "light-sweep 14s ease-in-out infinite" }}
       />
 
       <div

@@ -35,9 +35,14 @@ export default function ParticleBackground({
 
     const getCount = () => {
       const isMobile = window.innerWidth < 768;
+      const isSmall = window.innerWidth < 640;
       const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (reduced) return isMobile ? 8 : 12;
-      const base = { low: isMobile ? 18 : 28, medium: isMobile ? 28 : 42, high: isMobile ? 36 : 52 };
+      if (reduced) return isMobile ? 6 : 10;
+      const base = {
+        low: isSmall ? 10 : isMobile ? 14 : 28,
+        medium: isSmall ? 14 : isMobile ? 20 : 42,
+        high: isSmall ? 18 : isMobile ? 26 : 52,
+      };
       return base[density];
     };
 
@@ -70,6 +75,10 @@ export default function ParticleBackground({
 
       const w = window.innerWidth;
       const h = window.innerHeight;
+      const isMobile = w < 768;
+      const connectDistance = isMobile ? 80 : 110;
+      const drawConnections = !isMobile;
+
       ctx.clearRect(0, 0, w, h);
 
       particles.forEach((p, i) => {
@@ -86,16 +95,18 @@ export default function ParticleBackground({
         ctx.fillStyle = `rgba(0, 255, 136, ${p.opacity})`;
         ctx.fill();
 
+        if (!drawConnections) return;
+
         for (let j = i + 1; j < particles.length; j++) {
           const p2 = particles[j];
           const dx = p.x - p2.x;
           const dy = p.y - p2.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 110) {
+          if (dist < connectDistance) {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(0, 255, 136, ${0.06 * (1 - dist / 110)})`;
+            ctx.strokeStyle = `rgba(0, 255, 136, ${0.06 * (1 - dist / connectDistance)})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
@@ -134,7 +145,7 @@ export default function ParticleBackground({
   return (
     <canvas
       ref={canvasRef}
-      className={`absolute inset-0 pointer-events-none opacity-40 ${className}`}
+      className={`absolute inset-0 pointer-events-none opacity-25 sm:opacity-40 ${className}`}
       aria-hidden="true"
     />
   );

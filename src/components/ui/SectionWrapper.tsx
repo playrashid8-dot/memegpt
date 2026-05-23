@@ -15,7 +15,7 @@ export default function SectionWrapper({
   className = "",
 }: SectionWrapperProps) {
   return (
-    <section id={id} className={`relative py-20 sm:py-28 md:py-32 section-glow ${className}`}>
+    <section id={id} className={`relative py-14 sm:py-28 md:py-32 section-glow ${className}`}>
       <motion.div
         initial={{ opacity: 0, y: 32 }}
         whileInView={{ opacity: 1, y: 0 }}

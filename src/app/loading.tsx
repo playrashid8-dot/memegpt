@@ -55,15 +55,15 @@ export default function Loading() {
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black overflow-hidden"
     >
-      <div className="absolute inset-0 grid-bg opacity-20" />
-      <div className="absolute inset-0 scan-overlay opacity-60" />
-      <div className="absolute inset-0 terminal-scan-line opacity-40" />
+      <div className="absolute inset-0 grid-bg opacity-15 sm:opacity-20" />
+      <div className="absolute inset-0 scan-overlay opacity-30 sm:opacity-60" />
+      <div className="absolute inset-0 terminal-scan-line opacity-25 sm:opacity-40 hidden sm:block" />
 
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="relative flex flex-col items-center gap-8 px-6 max-w-md w-full"
+        className="relative flex flex-col items-center gap-6 sm:gap-8 px-6 max-w-md w-full"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.85 }}
@@ -73,20 +73,20 @@ export default function Loading() {
         >
           <motion.div
             animate={{ rotate: 360 }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
-            className="absolute -inset-6 rounded-full border-2 border-neon/15 border-t-neon shadow-[0_0_24px_rgba(0,255,136,0.15)]"
+            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            className="absolute -inset-5 sm:-inset-6 rounded-full border-2 border-neon/12 sm:border-neon/15 border-t-neon shadow-[0_0_16px_rgba(0,255,136,0.12)] sm:shadow-[0_0_24px_rgba(0,255,136,0.15)] gpu-layer"
           />
           <motion.div
             animate={{ rotate: -360 }}
-            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-            className="absolute -inset-4 rounded-full border border-dashed border-neon/25"
+            transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+            className="absolute -inset-3 sm:-inset-4 rounded-full border border-dashed border-neon/20 sm:border-neon/25 gpu-layer hidden sm:block"
           />
           <motion.div
-            animate={{ scale: [1, 1.15, 1], opacity: [0.2, 0.35, 0.2] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -inset-8 rounded-full bg-neon/10 blur-xl"
+            animate={{ scale: [1, 1.1, 1], opacity: [0.15, 0.28, 0.15] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute -inset-6 sm:-inset-8 rounded-full bg-neon/8 blur-lg sm:blur-xl gpu-layer"
           />
-          <Logo variant="loading" showScan animated />
+          <Logo variant="loading" showScan={false} animated />
         </motion.div>
 
         <div className="w-full loading-terminal text-left space-y-1.5 min-h-[120px]">

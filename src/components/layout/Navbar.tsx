@@ -6,6 +6,8 @@ import Button from "@/components/ui/Button";
 import Logo from "@/components/ui/Logo";
 import { useState } from "react";
 
+const MENU_EASE = [0.22, 1, 0.36, 1] as const;
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
 
@@ -13,11 +15,11 @@ export default function Navbar() {
     <motion.header
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.7, ease: MENU_EASE }}
       className="fixed top-0 left-0 right-0 z-50"
     >
       <nav className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
-        <div className="mt-2.5 sm:mt-3 flex items-center justify-between rounded-xl glass-card-ultra px-3 sm:px-4 py-2.5 sm:py-3 md:px-6 border-neon/15 shadow-[0_8px_40px_rgba(0,0,0,0.45)]">
+        <div className="mt-2 sm:mt-3 flex items-center justify-between rounded-xl glass-card-ultra px-3 sm:px-4 py-2 sm:py-3 md:px-6 border-neon/15 shadow-[0_4px_24px_rgba(0,0,0,0.4)] sm:shadow-[0_8px_40px_rgba(0,0,0,0.45)]">
           <a
             href="#"
             className="group flex items-center shrink-0 min-w-0 transition-transform duration-300 hover:scale-[1.02] active:scale-[0.98]"
@@ -50,21 +52,24 @@ export default function Navbar() {
 
           <button
             onClick={() => setOpen(!open)}
-            className="md:hidden relative w-9 h-9 flex flex-col items-center justify-center gap-1.5 shrink-0"
+            className="md:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-[5px] shrink-0 -mr-1 rounded-lg active:bg-neon/5 transition-colors"
             aria-label="Toggle menu"
             aria-expanded={open}
           >
             <motion.span
-              animate={open ? { rotate: 45, y: 5 } : { rotate: 0, y: 0 }}
-              className="block w-5 h-0.5 bg-neon shadow-[0_0_6px_rgba(0,255,136,0.4)]"
+              animate={open ? { rotate: 45, y: 6 } : { rotate: 0, y: 0 }}
+              transition={{ duration: 0.28, ease: MENU_EASE }}
+              className="block w-[18px] h-0.5 bg-neon shadow-[0_0_4px_rgba(0,255,136,0.35)] origin-center"
             />
             <motion.span
-              animate={open ? { opacity: 0 } : { opacity: 1 }}
-              className="block w-5 h-0.5 bg-neon"
+              animate={open ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
+              transition={{ duration: 0.2, ease: MENU_EASE }}
+              className="block w-[18px] h-0.5 bg-neon origin-center"
             />
             <motion.span
-              animate={open ? { rotate: -45, y: -5 } : { rotate: 0, y: 0 }}
-              className="block w-5 h-0.5 bg-neon shadow-[0_0_6px_rgba(0,255,136,0.4)]"
+              animate={open ? { rotate: -45, y: -6 } : { rotate: 0, y: 0 }}
+              transition={{ duration: 0.28, ease: MENU_EASE }}
+              className="block w-[18px] h-0.5 bg-neon shadow-[0_0_4px_rgba(0,255,136,0.35)] origin-center"
             />
           </button>
         </div>
@@ -72,16 +77,16 @@ export default function Navbar() {
         <motion.div
           initial={false}
           animate={open ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
-          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.32, ease: MENU_EASE }}
           className="md:hidden overflow-hidden"
         >
-          <div className="mt-2 rounded-xl glass-card-ultra p-3 sm:p-4 flex flex-col gap-1 border-neon/15">
+          <div className="mt-1.5 rounded-xl glass-card-ultra p-3 flex flex-col gap-0.5 border-neon/15">
             {NAV_LINKS.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="text-sm text-foreground/65 hover:text-neon py-2.5 px-3 rounded-lg hover:bg-neon/5 transition-colors"
+                className="text-sm text-foreground/65 hover:text-neon py-3 px-3 rounded-lg hover:bg-neon/5 active:bg-neon/8 transition-colors"
               >
                 {link.label}
               </a>

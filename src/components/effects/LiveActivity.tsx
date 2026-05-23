@@ -4,8 +4,10 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import AnimatedCounter from "@/components/ui/AnimatedCounter";
 import { LIVE_ACTIVITY } from "@/lib/mockData";
+import { useIsMobile } from "@/lib/useMedia";
 
 export default function LiveActivity() {
+  const isMobile = useIsMobile();
   const [values, setValues] = useState<number[]>(() =>
     LIVE_ACTIVITY.map((item) => item.value)
   );
@@ -38,8 +40,8 @@ export default function LiveActivity() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.75 + i * 0.08, ease: [0.22, 1, 0.36, 1] }}
-          whileHover={{ scale: 1.02, y: -3 }}
-          className="glass-card-ultra rounded-xl p-3 sm:p-4 md:p-5 text-center corner-accent holographic-border relative group"
+          whileHover={isMobile ? undefined : { scale: 1.02, y: -3 }}
+          className="glass-card-ultra rounded-xl p-3 sm:p-4 md:p-5 text-center corner-accent holographic-border relative group gpu-layer"
         >
           <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-neon/6 via-transparent to-cyan/4 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           <div className="relative">
@@ -47,7 +49,7 @@ export default function LiveActivity() {
               <span className="text-base sm:text-lg md:text-xl">{item.icon}</span>
               {item.live && (
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon opacity-60" />
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-neon opacity-60 motion-reduce:hidden" />
                   <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-neon shadow-[0_0_6px_rgba(0,255,136,0.6)]" />
                 </span>
               )}
